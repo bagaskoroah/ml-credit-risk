@@ -4,7 +4,7 @@ import pandas as pd
 from typing import Any, Dict, Tuple
 import matplotlib.pyplot as plt
 
-def evaluate_baseline(y_train: np.ndarray, y_pred: np.ndarray) -> Tuple[float, float, float, float]:
+def evaluate_baseline(y_train: np.ndarray, y_pred: np.ndarray, y_proba: np.ndarray) -> Tuple[float, float, float, float]:
     """
     Calculate baseline evaluation metrics (recall, precision, f1-score).
 
@@ -12,6 +12,7 @@ def evaluate_baseline(y_train: np.ndarray, y_pred: np.ndarray) -> Tuple[float, f
     ----------
         y_train (np.ndarray): True labels from the training set.
         y_pred (np.ndarray): Predicted labels from the model.
+        y_proba (np.ndarray): Predicted probabilities for positive class.
 
     Returns
     -------
@@ -22,7 +23,7 @@ def evaluate_baseline(y_train: np.ndarray, y_pred: np.ndarray) -> Tuple[float, f
     recall_base = recall_score(y_train, y_pred)
     precision_base = precision_score(y_train, y_pred)
     f1_base = f1_score(y_train, y_pred)
-    roc_auc_base = roc_auc_score(y_train, y_pred)
+    roc_auc_base = roc_auc_score(y_train, y_proba)
 
     return recall_base, precision_base, f1_base, roc_auc_base
 
@@ -70,17 +71,18 @@ def evaluate_cv_train(
 
     # predict models to train
     y_pred = best_model.predict(X_train)
+    y_proba = best_model.predict_proba(X_train)[:, 1]
 
     # generate train scores
     recall_train = recall_score(y_train, y_pred)
     precision_train = precision_score(y_train, y_pred)
     f1_train = f1_score(y_train, y_pred)
-    roc_auc_train = roc_auc_score(y_train, y_pred)
+    roc_auc_train = roc_auc_score(y_train, y_proba)
 
     return best_param, best_model, recall_cv, precision_cv, f1_cv, roc_auc_cv, \
     recall_train, precision_train, f1_train, roc_auc_train
 
-def evaluate_test(y_test: np.ndarray, y_pred: np.ndarray) -> Tuple[float, float, float, float]:
+def evaluate_test(y_test: np.ndarray, y_pred: np.ndarray, y_proba: np.ndarray) -> Tuple[float, float, float, float]:
     """
     Evaluate model performance on the test set.
 
@@ -88,6 +90,7 @@ def evaluate_test(y_test: np.ndarray, y_pred: np.ndarray) -> Tuple[float, float,
     ----------
         y_test (np.ndarray): True labels from the test set.
         y_pred (np.ndarray): Predicted labels from the model.
+        y_proba (np.ndarray): Predicted probabilities for positive class.
 
     Returns
     -------
@@ -98,7 +101,7 @@ def evaluate_test(y_test: np.ndarray, y_pred: np.ndarray) -> Tuple[float, float,
     recall_test = recall_score(y_test, y_pred)
     precision_test = precision_score(y_test, y_pred)
     f1_test = f1_score(y_test, y_pred)
-    roc_auc_test = roc_auc_score(y_test, y_pred)
+    roc_auc_test = roc_auc_score(y_test, y_proba)
 
     return recall_test, precision_test, f1_test, roc_auc_test
 

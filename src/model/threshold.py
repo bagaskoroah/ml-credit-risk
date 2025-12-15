@@ -28,6 +28,9 @@ class ThresholdClassifier:
         self.estimator = estimator
         self.threshold = threshold_point
 
+    def predict_proba(self, X_test):
+        return self.estimator.predict_proba(X_test)[:, 1]
+
     def predict(self, X_test: np.ndarray) -> np.ndarray:
         return (self.estimator.predict_proba(X_test)[:, 1] >= self.threshold).astype(int)
     

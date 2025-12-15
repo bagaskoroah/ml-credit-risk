@@ -25,7 +25,7 @@ def build_baseline(X_train: np.ndarray,
         Training features.
     y_train : np.ndarray
         Training labels.
-s
+
     Returns
     -------
     np.ndarray
@@ -40,8 +40,9 @@ s
 
     # predict train data
     y_pred = base_model.predict(X_train)
+    y_proba = base_model.predict_proba(X_train)[:, 1]
 
-    return y_pred
+    return y_pred, y_proba
 
 def build_cv_train(
         estimator: Any, 
@@ -150,9 +151,10 @@ def build_test(
 
     # predict models on test data
     y_pred = estimator.predict(X_test)
+    y_proba = estimator.predict_proba(X_test)[:, 1]
     
     # calculate processing time
     end_time = time.time() - start_time
     end_time = round(end_time/60, 2)
 
-    return y_pred
+    return y_pred, y_proba
