@@ -66,9 +66,6 @@ def evaluate_cv_train(
     f1_cv = estimator.cv_results_['mean_test_f1'].max()
     roc_auc_cv = estimator.cv_results_['mean_test_roc_auc'].max()
 
-    # fitting models to train
-    best_model.fit(X_train, y_train)
-
     # predict models to train
     y_pred = best_model.predict(X_train)
     y_proba = best_model.predict_proba(X_train)[:, 1]
